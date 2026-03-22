@@ -2,7 +2,7 @@
 
 > CAUTION: This app is intentionally vulnerable. Do not deploy it anywhere public or use it in production. It is a local sandbox only. LIKE SERIOUSLY THIS IS ONLY A SANDBOX AND SHOULDN'T BE USED AN ACTUAL APP.....
 
-SecureCart is a deliberately vulnerable e-commerce app I built to tinker with application security concepts. It covers OWASP Top 10, AWS misconfigurations, and Kafka event stream security in a context that feels close to a real financial application. Not bleeding edge, just me learning by doing. I went ahead and threw in Localstack so I could test out the AWS enviroment without using my own real AWS assets.
+SecureCart is a deliberately vulnerable e-commerce app I built to tinker with application security concepts + to keep some cloud experience I got from being a Full-Stack engineer polished. It covers OWASP Top 10, AWS misconfigurations, and Kafka event stream security in a context that feels close to a real financial application. Not bleeding edge, just me learning by doing. I went ahead and threw in Localstack so I could test out the AWS enviroment without using my own real AWS assets.
 
 ---
 
