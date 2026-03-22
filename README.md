@@ -8,12 +8,12 @@ SecureCart is a deliberately vulnerable e-commerce app I built to tinker with ap
 
 ## What is in here
 
-- Angular frontend with Angular Material
-- Node/Express backend with SQLite
+- Angular frontend with Angular Material(Infrastruce Done, implementation coming soon..)
+- Node/Express backend with SQLite (Infrastruce Done, implementation coming soon..)
 - Apache Kafka for event streaming
 - LocalStack for AWS simulation (S3, IAM, SSM)
-- Intentional vulnerabilities with working exploits and verified patches
-- GitHub Actions CI with Semgrep SAST and Gitleaks secrets scanning
+- Intentional vulnerabilities with working exploits and verified patches (coming soon..)
+- GitHub Actions CI with Semgrep SAST and Gitleaks secrets scanning (coming soon..)
 
 ---
 
