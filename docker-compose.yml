@@ -34,3 +34,15 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+
+  localstack:
+      image: localstack/localstack:latest
+      container_name: localstack
+      ports:
+        - "4566:4566"
+      environment:
+        - SERVICES=s3,iam,ssm
+        - DEBUG=1
+        - AWS_DEFAULT_REGION=us-east-1
+      volumes:
+        - ./infrastructure/localstack:/etc/localstack/init/ready.d
