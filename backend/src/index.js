@@ -3,7 +3,9 @@ const cors = require('cors');
 const { createTopics } = require('./kafka/admin');
 const { connectProducer } = require('./producers/orderProducer');
 const { startOrderConsumer } = require('./consumers/orderConsumer');
+const { createTables } = require('./db/schema');
 const checkoutRouter = require('./routes/checkout');
+
 
 require('dotenv').config();
 
@@ -25,6 +27,7 @@ app.use('/api/checkout', checkoutRouter);
 
 app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
+  createTables();
   await createTopics();
   await connectProducer();
   await startOrderConsumer();
