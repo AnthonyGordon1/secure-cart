@@ -9,11 +9,6 @@ const { createTables } = require('./db/schema');
 const checkoutRouter = require('./routes/checkout');
 const authRouter = require('./routes/auth');
 
-
-
-require('dotenv').config();
-
-
 //Creating the app
 const app = express();
 const PORT = process.env.PORT || 3000;
