@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../env/env';
+import { environment } from '../env/env';
 
 
 @Injectable({
@@ -8,7 +8,7 @@ import { environment } from '../../env/env';
 })
 export class ApiService {
 
-  private expressBaseApiUrl = environment.apiUrl;
+  private expressBaseApiUrl = environment.expressBaseApiUrl;
 
   constructor(private http: HttpClient) {}
 
