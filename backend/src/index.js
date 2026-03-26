@@ -1,13 +1,12 @@
 const express = require('express');
 const cors = require('cors');
-
 const { createTopics } = require('./kafka/admin');
 const { connectProducer } = require('./producers/orderProducer');
 const { startOrderConsumer } = require('./consumers/orderConsumer');
-const { createTables } = require('./db/schema');
-
 const checkoutRouter = require('./routes/checkout');
-const authRouter = require('./routes/auth');
+
+require('dotenv').config();
+
 
 //Creating the app
 const app = express();
@@ -23,13 +22,9 @@ app.get('/health', (req, res) => {
 
 app.use('/api/checkout', checkoutRouter);
 
-app.use('/api/auth', authRouter);
-
-
 
 app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
-  createTables();
   await createTopics();
   await connectProducer();
   await startOrderConsumer();
