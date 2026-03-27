@@ -1,60 +1,98 @@
-<!-- Login and register form using Angular Material components -->
-<div class="auth-container">
-  <mat-card>
+<!-- Modern e-commerce login page with split layout -->
+<div class="auth-wrapper">
 
-    <!-- Title changes based on current mode -->
-    <mat-card-header>
-      <mat-card-title>{{ isLoginMode ? 'Login' : 'Register' }}</mat-card-title>
-    </mat-card-header>
+  <!-- Left panel — branding -->
+  <div class="auth-brand">
+    <div class="brand-content">
+      <div class="brand-logo">
+        <span class="logo-icon">🛒</span>
+        <span class="logo-text">SecureCart</span>
+      </div>
+      <h1 class="brand-headline">Shop smarter.<br>Stay secure.</h1>
+      <p class="brand-sub">A sandbox for learning application security through real vulnerabilities, real exploits, and real fixes.</p>
+      <div class="brand-badges">
+        <span class="badge">OWASP Top 10</span>
+        <span class="badge">Kafka Security</span>
+        <span class="badge">AWS Misconfigs</span>
+      </div>
+    </div>
+  </div>
 
-    <mat-card-content>
-      <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+  <!-- Right panel — form -->
+  <div class="auth-form-panel">
+    <div class="form-container">
 
-        <!-- Username only shown in register mode -->
+      <div class="form-header">
+        <h2>{{ isLoginMode ? 'Welcome back' : 'Create account' }}</h2>
+        <p>{{ isLoginMode ? 'Sign in to your account' : 'Get started with SecureCart' }}</p>
+      </div>
+
+      <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="auth-form">
+
         @if (!isLoginMode) {
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Username</mat-label>
-            <input matInput formControlName="username" placeholder="Enter username">
-          </mat-form-field>
+          <div class="field-group">
+            <label class="field-label">Username</label>
+            <input
+              class="field-input"
+              formControlName="username"
+              type="text"
+              placeholder="johndoe"
+              autocomplete="username">
+          </div>
         }
 
-        <!-- Email shown in both modes -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="email" placeholder="Enter email">
-          @if (authForm.get('email')?.hasError('email')) {
-            <mat-error>Please enter a valid email</mat-error>
+        <div class="field-group">
+          <label class="field-label">Email</label>
+          <input
+            class="field-input"
+            formControlName="email"
+            type="email"
+            placeholder="you@example.com"
+            autocomplete="email">
+          @if (authForm.get('email')?.touched && authForm.get('email')?.hasError('email')) {
+            <span class="field-error">Enter a valid email address</span>
           }
-        </mat-form-field>
+        </div>
 
-        <!-- Password shown in both modes -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Password</mat-label>
-          <input matInput type="password" formControlName="password" placeholder="Enter password">
-          @if (authForm.get('password')?.hasError('minlength')) {
-            <mat-error>Password must be at least 6 characters</mat-error>
+        <div class="field-group">
+          <label class="field-label">
+            Password
+            @if (isLoginMode) {
+              <a href="#" class="forgot-link">Forgot password?</a>
+            }
+          </label>
+          <input
+            class="field-input"
+            formControlName="password"
+            type="password"
+            placeholder="••••••••"
+            autocomplete="current-password">
+          @if (authForm.get('password')?.touched && authForm.get('password')?.hasError('minlength')) {
+            <span class="field-error">Password must be at least 6 characters</span>
           }
-        </mat-form-field>
+        </div>
 
-        <!-- Backend error message -->
         @if (errorMessage) {
-          <p class="error-message">{{ errorMessage }}</p>
+          <div class="error-banner">
+            <span>⚠️</span> {{ errorMessage }}
+          </div>
         }
 
-        <!-- Submit button -->
-        <button mat-raised-button color="primary" type="submit" class="full-width">
-          {{ isLoginMode ? 'Login' : 'Register' }}
+        <button type="submit" class="submit-btn" [disabled]="authForm.invalid">
+          {{ isLoginMode ? 'Sign in' : 'Create account' }}
+          <span class="btn-arrow">→</span>
         </button>
 
       </form>
-    </mat-card-content>
 
-    <!-- Toggle between login and register -->
-    <mat-card-actions>
-      <button mat-button (click)="toggleMode()">
-        {{ isLoginMode ? 'Need an account? Register' : 'Already have an account? Login' }}
-      </button>
-    </mat-card-actions>
+      <div class="form-footer">
+        <span>{{ isLoginMode ? "Don't have an account?" : 'Already have an account?' }}</span>
+        <button class="toggle-btn" (click)="toggleMode()">
+          {{ isLoginMode ? 'Register' : 'Sign in' }}
+        </button>
+      </div>
 
-  </mat-card>
+    </div>
+  </div>
+
 </div>
