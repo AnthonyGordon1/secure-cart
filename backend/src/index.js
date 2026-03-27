@@ -8,7 +8,7 @@ const { createTables } = require('./db/schema');
 const { seedProducts } = require('./db/seed');
 
 const checkoutRouter = require('./routes/checkout');
-const authRouter = require('./routes/auth');
+const authRouter = require('./routes/auth');const productsRouter = require('./routes/products');
 
 //Creating the app
 const app = express();
@@ -23,9 +23,8 @@ app.get('/health', (req, res) => {
 });
 
 app.use('/api/checkout', checkoutRouter);
-
 app.use('/api/auth', authRouter);
-
+app.use('/api/products', productsRouter);
 
 
 app.listen(PORT, async () => {
