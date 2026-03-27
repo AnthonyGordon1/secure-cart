@@ -10,7 +10,13 @@ export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 
   // Login page — public, no guard needed
-  { path: 'login', children: [] },
+  { path: 'login', 
+    loadComponent: () => import('./pages/auth/auth').then(m => m.AuthComponent) 
+  },
+  { 
+    path: 'register', 
+    loadComponent: () => import('./pages/auth/auth').then(m => m.AuthComponent) 
+  },
 
   // Dashboard — protected, requires valid JWT token
   // Component will be added in Story 4
