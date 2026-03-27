@@ -129,4 +129,24 @@
     height: 40px;
     font-weight: 600;
   }
+  .quantity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0 16px 8px;
+
+  button {
+    color: #3b82f6;
+  }
+
+  .quantity {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    min-width: 24px;
+    text-align: center;
+  }
+}
 }

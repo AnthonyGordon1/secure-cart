@@ -72,6 +72,21 @@ export class ProductsComponent implements OnInit {
     const current = this.cart.get(product.id) || 0;
     this.cart.set(product.id, current + 1);
   }
+  // Remove one quantity of a product from the cart
+  removeFromCart(productId: number) {
+    const current = this.cart.get(productId) || 0;
+    if (current <= 1) {
+      // Remove entirely if quantity hits zero
+      this.cart.delete(productId);
+    } else {
+      this.cart.set(productId, current - 1);
+    }
+  }
+
+  // Get quantity of a specific product in the cart
+  getQuantity(productId: number): number {
+    return this.cart.get(productId) || 0;
+  }
 
   // Get total number of items in cart
   get cartCount(): number {

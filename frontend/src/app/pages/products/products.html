@@ -3,65 +3,73 @@
 
 <!-- Top navigation bar -->
 <mat-toolbar class="navbar">
-  <div class="nav-brand">
-    <span class="logo-icon">🛒</span>
-    <span class="logo-text">SecureCart</span>
-  </div>
-  <span class="spacer"></span>
-  <button mat-icon-button class="cart-btn">
-    <mat-icon [matBadge]="cartCount" matBadgeColor="accent" [matBadgeHidden]="cartCount === 0">
-      shopping_cart
-    </mat-icon>
-  </button>
-  <button mat-button class="logout-btn" (click)="logout()">Logout</button>
+    <div class="nav-brand">
+        <span class="logo-icon">🛒</span>
+        <span class="logo-text">SecureCart</span>
+    </div>
+    <span class="spacer"></span>
+    <button mat-icon-button class="cart-btn">
+        <mat-icon [matBadge]="cartCount" matBadgeColor="accent" [matBadgeHidden]="cartCount === 0">
+            shopping_cart
+        </mat-icon>
+    </button>
+    <button mat-button class="logout-btn" (click)="logout()">Logout</button>
 </mat-toolbar>
 
 <!-- Main content -->
 <div class="products-container">
 
-  <!-- Page header -->
-  <div class="page-header">
-    <h1>Products</h1>
-    <p>{{ products.length }} items available</p>
-  </div>
+    <!-- Page header -->
+    <div class="page-header">
+        <h1>Products</h1>
+        <p>{{ products.length }} items available</p>
+    </div>
 
-  <!-- Loading spinner -->
-  @if (loading) {
+    <!-- Loading spinner -->
+    @if (loading) {
     <div class="loading-state">
-      <mat-spinner diameter="48"></mat-spinner>
+        <mat-spinner diameter="48"></mat-spinner>
     </div>
-  }
+    }
 
-  <!-- Error state -->
-  @if (error) {
+    <!-- Error state -->
+    @if (error) {
     <div class="error-state">
-      <p>{{ error }}</p>
+        <p>{{ error }}</p>
     </div>
-  }
+    }
 
-  <!-- Product grid -->
-  @if (!loading && !error) {
+    <!-- Product grid -->
+    @if (!loading && !error) {
     <div class="product-grid">
-      @for (product of products; track product.id) {
+        @for (product of products; track product.id) {
         <mat-card class="product-card">
-          <img mat-card-image [src]="product.image_url" [alt]="product.name">
-          <mat-card-content>
-            <h3 class="product-name">{{ product.name }}</h3>
-            <p class="product-description">{{ product.description }}</p>
-            <p class="product-price">{{ formatPrice(product.price) }}</p>
-          </mat-card-content>
-          <mat-card-actions>
-            <button
-              mat-raised-button
-              [color]="isInCart(product.id) ? 'accent' : 'primary'"
-              (click)="addToCart(product)"
-              class="add-btn">
-              {{ isInCart(product.id) ? '✓ Added' : 'Add to Cart' }}
-            </button>
-          </mat-card-actions>
+            <img mat-card-image [src]="product.image_url" [alt]="product.name">
+            <mat-card-content>
+                <h3 class="product-name">{{ product.name }}</h3>
+                <p class="product-description">{{ product.description }}</p>
+                <p class="product-price">{{ formatPrice(product.price) }}</p>
+            </mat-card-content>
+            <mat-card-actions>
+                @if (isInCart(product.id)) {
+                <div class="quantity-controls">
+                    <button mat-icon-button (click)="removeFromCart(product.id)">
+                        <mat-icon>remove</mat-icon>
+                    </button>
+                    <span class="quantity">{{ getQuantity(product.id) }}</span>
+                    <button mat-icon-button (click)="addToCart(product)">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+                } @else {
+                <button mat-raised-button color="primary" (click)="addToCart(product)" class="add-btn">
+                    Add to Cart
+                </button>
+                }
+            </mat-card-actions>
         </mat-card>
-      }
+        }
     </div>
-  }
+    }
 
 </div>
