@@ -8,7 +8,7 @@
         <span class="logo-text">SecureCart</span>
     </div>
     <span class="spacer"></span>
-    <button mat-icon-button class="cart-btn">
+    <button mat-icon-button class="cart-btn" (click)="goToCart()">
         <mat-icon [matBadge]="cartCount" matBadgeColor="accent" [matBadgeHidden]="cartCount === 0">
             shopping_cart
         </mat-icon>

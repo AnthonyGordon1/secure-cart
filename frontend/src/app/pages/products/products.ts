@@ -11,6 +11,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ProductService, Product } from '../../services/product';
+import { CartService } from '../../services/cart';
 
 
 @Component({
@@ -42,14 +43,23 @@ export class ProductsComponent implements OnInit {
   // Error message
   error = '';
 
+  //Cart def
+  cartCount = 0;
+
   constructor(
     private productService: ProductService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private cartService: CartService,
 
   ) { }
 
   ngOnInit() {
+    this.cartService.cart$.subscribe(() => {
+      this.cartCount = this.cartService.getTotalCount();
+      this.cdr.detectChanges();
+    });
+
     this.productService.getProducts().subscribe({
       next: (products) => {
         console.log('Products received:', products);
@@ -67,33 +77,18 @@ export class ProductsComponent implements OnInit {
     });
   }
 
+
   // Add a product to the cart
-  addToCart(product: Product) {
-    const current = this.cart.get(product.id) || 0;
-    this.cart.set(product.id, current + 1);
-  }
+  addToCart(product: Product) { this.cartService.addToCart(product); }
+
   // Remove one quantity of a product from the cart
-  removeFromCart(productId: number) {
-    const current = this.cart.get(productId) || 0;
-    if (current <= 1) {
-      // Remove entirely if quantity hits zero
-      this.cart.delete(productId);
-    } else {
-      this.cart.set(productId, current - 1);
-    }
-  }
+  removeFromCart(productId: number) { this.cartService.removeFromCart(productId); }
 
   // Get quantity of a specific product in the cart
   getQuantity(productId: number): number {
-    return this.cart.get(productId) || 0;
+    return this.cartService.getItems().find(i => i.product.id === productId)?.quantity || 0;
   }
 
-  // Get total number of items in cart
-  get cartCount(): number {
-    let total = 0;
-    this.cart.forEach(qty => total += qty);
-    return total;
-  }
 
   // Format price as currency
   formatPrice(price: number): string {
@@ -105,8 +100,9 @@ export class ProductsComponent implements OnInit {
 
   // Check if a product is in the cart
   isInCart(productId: number): boolean {
-    return this.cart.has(productId);
+    return this.cartService.getItems().some(i => i.product.id === productId);
   }
+  goToCart() { this.router.navigate(['/cart']); }
 
   logout() {
     localStorage.removeItem('token');
