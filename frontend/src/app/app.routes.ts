@@ -10,12 +10,18 @@ export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 
   // Login page — public, no guard needed
-  { path: 'login', 
-    loadComponent: () => import('./pages/auth/auth').then(m => m.AuthComponent) 
+  {
+    path: 'login',
+    loadComponent: () => import('./pages/auth/auth').then(m => m.AuthComponent)
   },
-  { 
-    path: 'register', 
-    loadComponent: () => import('./pages/auth/auth').then(m => m.AuthComponent) 
+  {
+    path: 'register',
+    loadComponent: () => import('./pages/auth/auth').then(m => m.AuthComponent)
+  },
+  {
+    path: 'products',
+    loadComponent: () => import('./pages/products/products').then(m => m.ProductsComponent),
+    canActivate: [authGuard]
   },
 
   // Dashboard — protected, requires valid JWT token

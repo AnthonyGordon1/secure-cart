@@ -65,8 +65,8 @@ export class AuthComponent implements OnInit {
         next: (response: any) => {
           // Save JWT to localStorage
           this.authService.saveToken(response.token);
-          // Redirect to dashboard
-          this.router.navigate(['/dashboard']);
+          // Redirect to product page
+          this.router.navigate(['/products']);
         },
         error: () => {
           this.errorMessage = 'Invalid email or password';
