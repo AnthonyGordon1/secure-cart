@@ -5,6 +5,7 @@ const { createTopics } = require('./kafka/admin');
 const { connectProducer } = require('./producers/orderProducer');
 const { startOrderConsumer } = require('./consumers/orderConsumer');
 const { createTables } = require('./db/schema');
+const { seedProducts } = require('./db/seed');
 
 const checkoutRouter = require('./routes/checkout');
 const authRouter = require('./routes/auth');
@@ -30,6 +31,7 @@ app.use('/api/auth', authRouter);
 app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
   createTables();
+  seedProducts();
   await createTopics();
   await connectProducer();
   await startOrderConsumer();

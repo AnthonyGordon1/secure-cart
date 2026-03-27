@@ -5,7 +5,7 @@ const db = require('./database');
 
 // Create all your tables if they do not exist
 const createTables = () => {
-    db.exec(`
+  db.exec(`
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       username TEXT NOT NULL UNIQUE,
@@ -14,9 +14,22 @@ const createTables = () => {
       role TEXT NOT NULL DEFAULT 'user'
     );
   `);
-    console.log('User Table created successfully');
+  console.log('User Table created successfully');
 
-    console.log('Tables created successfully');
+  // Products table — stores all available items in the store
+  db.exec(`
+  CREATE TABLE IF NOT EXISTS products (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE,
+    description TEXT NOT NULL,
+    price REAL NOT NULL,
+    image_url TEXT
+  );
+`);
+  console.log('Product Table created successfully');
+
+
+  console.log('All Tables created successfully');
 };
 
 // Export a function that runs all the table creation so index.js can call it on startup
