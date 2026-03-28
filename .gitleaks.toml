@@ -5,5 +5,6 @@ useDefault = true
 description = "Global allowlist"
 paths = [
   '''.env.example''',
-  '''README.md'''
+  '''README.md''',
+  '''docs/exploits/'''
 ]
