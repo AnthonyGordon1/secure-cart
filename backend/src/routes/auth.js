@@ -6,7 +6,9 @@ const db = require('../db/database');
 const { jwtSecret } = require('../config');
 const jwt = require('jsonwebtoken');
 
-// INTENTIONALLY VULNERABLE - weak bcrypt salt rounds 
+// TODO: VULNERABILITY (Story 7) — SALT_ROUNDS=1 is intentionally weak
+// bcrypt with 1 round is nearly instant to brute force
+// Secure version uses 12 rounds — Patch need
 const SALT_ROUNDS = 1;
 
 // Register
@@ -59,7 +61,14 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
-        // INTENTIONALLY VULNERABLE - weak JWT secret (Story 7)
+        // TODO: VULNERABILITY 1 (Story 7) — JWT_SECRET=changeme is a weak hardcoded secret
+        // Crackable in seconds with a common wordlist like rockyou.txt
+        // Secure version uses a strong randomly generated secret from .env
+
+        // VULNERABILITY 2 (Story 7) — No algorithm enforcement
+        // Without { algorithms: ['HS256'] } on verification, alg:none attack is possible
+        // An attacker can forge a token with no signature and gain admin access
+        // Secure version enforces HS256 explicitly — Patch is needed
         const token = jwt.sign({ id: user.id, role: user.role }, jwtSecret, { expiresIn: '24h' });
 
 
