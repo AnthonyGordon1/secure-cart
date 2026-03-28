@@ -2,13 +2,17 @@ const express = require('express');
 const cors = require('cors');
 
 const { createTopics } = require('./kafka/admin');
-const { connectProducer } = require('./producers/orderProducer');
+const { connectOrderProducer } = require('./producers/orderProducer');
+const { connectActivityProducer } = require('./producers/userActivityProducer');
 const { startOrderConsumer } = require('./consumers/orderConsumer');
+const { startUserActivityConsumer } = require('./consumers/userActivityConsumer');
 const { createTables } = require('./db/schema');
 const { seedProducts } = require('./db/seed');
 
 const checkoutRouter = require('./routes/checkout');
-const authRouter = require('./routes/auth');const productsRouter = require('./routes/products');
+const authRouter = require('./routes/auth'); 
+const productsRouter = require('./routes/products');
+const ordersRouter = require('./routes/orders')
 
 //Creating the app
 const app = express();
@@ -25,6 +29,7 @@ app.get('/health', (req, res) => {
 app.use('/api/checkout', checkoutRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/products', productsRouter);
+app.use('/api/orders', ordersRouter);
 
 
 app.listen(PORT, async () => {
@@ -32,8 +37,10 @@ app.listen(PORT, async () => {
   createTables();
   seedProducts();
   await createTopics();
-  await connectProducer();
+  await connectOrderProducer();
+  await connectActivityProducer();
   await startOrderConsumer();
+  await startUserActivityConsumer();
 });
 
 

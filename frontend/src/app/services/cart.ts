@@ -5,6 +5,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Product } from './product';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../env/env';
+import { AuthService } from '../services/auth';
 
 export interface CartItem {
   product: Product;

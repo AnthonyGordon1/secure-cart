@@ -28,6 +28,19 @@ const createTables = () => {
 `);
   console.log('Product Table created successfully');
 
+  // Orders table — stores placed orders linked to users
+  db.exec(`
+  CREATE TABLE IF NOT EXISTS orders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    items TEXT NOT NULL,
+    total REAL NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  );
+`);
+  console.log('Order Table created successfully');
 
   console.log('All Tables created successfully');
 };

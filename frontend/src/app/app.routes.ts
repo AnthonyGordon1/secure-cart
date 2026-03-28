@@ -28,6 +28,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/cart/cart').then(m => m.CartComponent),
     canActivate: [authGuard]
   },
+  {
+    path: 'orders',
+    loadComponent: () => import('./pages/orders/orders').then(m => m.OrdersComponent),
+    canActivate: [authGuard]
+  },
 
   // Dashboard — protected, requires valid JWT token
   // Component will be added in Story 4
