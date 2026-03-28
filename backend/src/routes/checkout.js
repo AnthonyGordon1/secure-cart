@@ -1,14 +1,24 @@
 const express = require('express');
 const router = express.Router();
 const { produceOrderPlaced } = require('../producers/orderProducer');
+const { produceUserActivity } = require('../producers/userActivityProducer');
+const db = require('../db/database');
 
 router.post('/', async (req, res) => {
   try {
+    const { userId, items, total } = req.body;
+
+    // Save order to database before producing Kafka event
+    const result = db.prepare(`
+  INSERT INTO orders (user_id, items, total, status)
+  VALUES (?, ?, ?, 'pending')
+`).run(userId, JSON.stringify(items), total);
+
     const orderData = {
-      orderId: Date.now(),
-      userId: req.body.userId,
-      items: req.body.items,
-      total: req.body.total,
+      orderId: result.lastInsertRowid,
+      userId,
+      items,
+      total,
       timestamp: new Date().toISOString()
     };
 
