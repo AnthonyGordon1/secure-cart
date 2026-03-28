@@ -48,7 +48,7 @@ export class ProductsComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
-    private router: Router,
+    public router: Router,
     private cdr: ChangeDetectorRef,
     private cartService: CartService,
 

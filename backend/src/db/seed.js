@@ -80,4 +80,25 @@ const seedProducts = () => {
   console.log(`Seeded ${products.length} products successfully`);
 };
 
-module.exports = { seedProducts };
+const bcrypt = require('bcrypt');
+
+// Seed one admin account for testing the admin panel
+const seedAdmin = () => {
+  const existing = db.prepare('SELECT id FROM users WHERE email = ?').get('admin@securecart.com');
+  if (existing) {
+    console.log('Admin account already exists — skipping');
+    return;
+  }
+
+  // INTENTIONALLY VULNERABLE — weak bcrypt rounds (Story 7)
+  const password_hash = bcrypt.hashSync('admin123', 1);
+
+  db.prepare(`
+    INSERT INTO users (username, email, password_hash, role)
+    VALUES (?, ?, ?, ?)
+  `).run('admin', 'admin@securecart.com', password_hash, 'admin');
+
+  console.log('Admin account seeded: admin@securecart.com / admin123');
+};
+
+module.exports = { seedProducts, seedAdmin };

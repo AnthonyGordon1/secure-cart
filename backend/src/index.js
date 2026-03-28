@@ -7,12 +7,13 @@ const { connectActivityProducer } = require('./producers/userActivityProducer');
 const { startOrderConsumer } = require('./consumers/orderConsumer');
 const { startUserActivityConsumer } = require('./consumers/userActivityConsumer');
 const { createTables } = require('./db/schema');
-const { seedProducts } = require('./db/seed');
+const { seedProducts, seedAdmin } = require('./db/seed');
 
 const checkoutRouter = require('./routes/checkout');
 const authRouter = require('./routes/auth'); 
 const productsRouter = require('./routes/products');
-const ordersRouter = require('./routes/orders')
+const ordersRouter = require('./routes/orders');
+const adminRouter = require('./routes/admin');
 
 //Creating the app
 const app = express();
@@ -30,12 +31,14 @@ app.use('/api/checkout', checkoutRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/orders', ordersRouter);
+app.use('/api/admin', adminRouter);
 
 
 app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
   createTables();
   seedProducts();
+  seedAdmin();
   await createTopics();
   await connectOrderProducer();
   await connectActivityProducer();
