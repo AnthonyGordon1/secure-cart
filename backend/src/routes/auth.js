@@ -3,11 +3,15 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const db = require('../db/database');
-const { jwtSecret } = require('../config');
 const jwt = require('jsonwebtoken');
+const { jwtSecret } = require('../config');
 
-// INTENTIONALLY VULNERABLE - weak bcrypt salt rounds 
-const SALT_ROUNDS = 1;
+
+
+// PATCHED (Story 7) — 12 rounds is the recommended minimum for bcrypt
+// Makes brute force attacks computationally expensive
+const SALT_ROUNDS = 12;
+
 
 // Register
 router.post('/register', async (req, res) => {
@@ -59,7 +63,14 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
-        // INTENTIONALLY VULNERABLE - weak JWT secret (Story 7)
+        // TODO: VULNERABILITY 1 (Story 7) — JWT_SECRET=changeme is a weak hardcoded secret
+        // Crackable in seconds with a common wordlist like rockyou.txt
+        // Secure version uses a strong randomly generated secret from .env
+
+        // VULNERABILITY 2 (Story 7) — No algorithm enforcement
+        // Without { algorithms: ['HS256'] } on verification, alg:none attack is possible
+        // An attacker can forge a token with no signature and gain admin access
+        // Secure version enforces HS256 explicitly — Patch is needed
         const token = jwt.sign({ id: user.id, role: user.role }, jwtSecret, { expiresIn: '24h' });
 
 
