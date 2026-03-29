@@ -3,13 +3,15 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const db = require('../db/database');
-const { jwtSecret } = require('../config');
 const jwt = require('jsonwebtoken');
+const { jwtSecret } = require('../config');
 
-// TODO: VULNERABILITY (Story 7) — SALT_ROUNDS=1 is intentionally weak
-// bcrypt with 1 round is nearly instant to brute force
-// Secure version uses 12 rounds — Patch need
-const SALT_ROUNDS = 1;
+
+
+// PATCHED (Story 7) — 12 rounds is the recommended minimum for bcrypt
+// Makes brute force attacks computationally expensive
+const SALT_ROUNDS = 12;
+
 
 // Register
 router.post('/register', async (req, res) => {
