@@ -1,19 +1,19 @@
-# SecureCart
+# 🛒 SecureCart
 
-> CAUTION: This app is intentionally vulnerable. Do not deploy it anywhere public or use it in production. It is a local sandbox only. LIKE SERIOUSLY THIS IS ONLY A SANDBOX AND SHOULDN'T BE USED AN ACTUAL APP.....
+> ⚠️ This app is intentionally vulnerable. Do not deploy it anywhere public or use it in production. It is a local sandbox only.
 
-SecureCart is a deliberately vulnerable e-commerce app I built to tinker with application security concepts + to keep some cloud experience I got from being a Full-Stack engineer polished. It covers OWASP Top 10, AWS misconfigurations, and Kafka event stream security in a context that feels close to a real financial application. Not bleeding edge, just me learning by doing. I went ahead and threw in Localstack so I could test out the AWS enviroment without using my own real AWS assets.
+SecureCart is a deliberately vulnerable e-commerce app I built to tinker with application security concepts. It covers OWASP Top 10, AWS misconfigurations, and Kafka event stream security in a context that feels close to a real financial application. Not bleeding edge, just me learning by doing.
 
 ---
 
 ## What is in here
 
-- Angular frontend with Angular Material(Infrastructure Done, implementation coming soon..)
-- Node/Express backend with SQLite (Infrastructure Done, implementation coming soon..)
+- Angular frontend with Angular Material dark theme
+- Node/Express backend with SQLite
 - Apache Kafka for event streaming
 - LocalStack for AWS simulation (S3, IAM, SSM)
-- Intentional vulnerabilities with working exploits and verified patches (coming soon..)
-- GitHub Actions CI with Semgrep SAST and Gitleaks secrets scanning (coming soon..)
+- GitHub Actions CI with Semgrep SAST and Gitleaks secrets scanning
+- Intentional vulnerabilities with working exploit scripts and verified patches
 
 ---
 
@@ -24,14 +24,14 @@ SecureCart is a deliberately vulnerable e-commerce app I built to tinker with ap
 - Node.js v22+
 - Docker Desktop
 - AWS CLI (`brew install awscli`)
-- Python 3 (`pip3 install awscli-local`)
+- Python 3 (`pip3 install awscli-local requests`)
 
 ### Steps
 
 **1. Clone the repo**
 ```bash
-git clone https://github.com/AnthonyGordon1/SecureCart.git
-cd SecureCart
+git clone https://github.com/AnthonyGordon1/secure-cart.git
+cd secure-cart
 ```
 
 **2. Install dependencies**
@@ -76,7 +76,7 @@ npm run dev
 **8. Start the frontend**
 ```bash
 cd frontend
-./node_modules/.bin/ng serve
+npm start
 ```
 
 **9. Verify everything is up**
@@ -87,6 +87,49 @@ cd frontend
 
 ---
 
-## Vulnerabilities
+## Vulnerability Index
 
-Full write-ups with exploit scripts and patches are in `/docs/vulnerabilities` — coming as the project builds out.
+Each vulnerability lives on a `vuln/` branch with a working exploit script. The corresponding `patch/` branch contains the fix and verification that the exploit fails. Full write-ups with CVSS scores, root cause analysis, and real-world context live in `docs/vulnerabilities/`.
+
+| # | Vulnerability | Category | CVSS | Status |
+| --- | --- | --- | --- | --- |
+| 1 | JWT alg:none Bypass | Broken Auth | 9.1 | ✅ [Write-up](docs/vulnerabilities/jwt-vulnerabilities.md) |
+| 2 | JWT Weak Secret | Broken Auth | 8.8 | ✅ [Write-up](docs/vulnerabilities/jwt-vulnerabilities.md) |
+| 3 | SQL Injection | Injection | 9.8 | Coming Soon |
+| 4 | Broken Access Control / IDOR | Access Control | 8.1 | Coming Soon |
+| 5 | Stored XSS | XSS | 8.0 | Coming Soon |
+| 6 | Excessive Data Exposure | API Security | 7.5 | Coming Soon |
+| 7 | Hardcoded Secrets | Security Misconfiguration | 9.1 | Coming Soon |
+| 8 | Unauthenticated Kafka Broker | Kafka Security | 9.3 | Coming Soon |
+| 9 | PII in Plaintext Kafka Events | Kafka Security | 7.5 | Coming Soon |
+| 10 | Kafka Consumer Injection | Kafka / Injection | 9.0 | Coming Soon |
+| 11 | Overly Permissive IAM Role | Cloud Security | 9.8 | Coming Soon |
+| 12 | Public S3 Bucket | Cloud Security | 8.6 | Coming Soon |
+
+---
+
+## Running exploit scripts
+
+Make sure the backend is running before executing any exploit scripts.
+```bash
+# JWT alg:none bypass
+python3 docs/exploits/jwt-alg-none.py
+
+# JWT weak secret brute force
+python3 docs/exploits/jwt-brute-force.py
+```
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+| --- | --- |
+| Frontend | Angular 21, Angular Material, TypeScript, RxJS |
+| Backend | Node.js, Express, SQLite |
+| Event Streaming | Apache Kafka, Zookeeper |
+| AWS Simulation | LocalStack (S3, IAM, SSM) |
+| SAST | Semgrep |
+| Secrets Scanning | Gitleaks |
+| CI/CD | GitHub Actions |
+| Containerization | Docker, docker-compose |
