@@ -66,7 +66,7 @@ export class CartComponent implements OnInit {
       total: this.cartService.getTotalPrice()
     };
 
-    this.http.post(`http://localhost:3000/api/checkout`, body).subscribe({
+    this.http.post(`${environment.apiUrl}/api/checkout`, body).subscribe({
       next: () => {
         this.cartService.clearCart();
         this.router.navigate(['/orders']);

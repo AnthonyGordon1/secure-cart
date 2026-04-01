@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const { port } = require('./config');
 
 const { createTopics } = require('./kafka/admin');
 const { connectOrderProducer } = require('./producers/orderProducer');
@@ -17,7 +18,6 @@ const adminRouter = require('./routes/admin');
 
 //Creating the app
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -34,8 +34,8 @@ app.use('/api/orders', ordersRouter);
 app.use('/api/admin', adminRouter);
 
 
-app.listen(PORT, async () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(port, async () => {
+  console.log(`Server running on port ${port}`);
   createTables();
   seedProducts();
   seedAdmin();

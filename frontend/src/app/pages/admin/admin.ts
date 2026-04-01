@@ -14,6 +14,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
 import { AuthService } from '../../services/auth';
+import { environment } from '../../../env/env';
 
 @Component({
   selector: 'app-admin',
@@ -50,7 +51,7 @@ export class AdminComponent implements OnInit {
 
   ngOnInit() {
     // Fetch all users and orders in parallel
-    this.http.get<any[]>('http://localhost:3000/api/admin/users').subscribe({
+    this.http.get<any[]>('${environment.apiUrl}/api/admin/users').subscribe({
       next: (users) => {
         this.users = users;
         this.cdr.detectChanges();
@@ -61,7 +62,7 @@ export class AdminComponent implements OnInit {
       }
     });
 
-    this.http.get<any[]>('http://localhost:3000/api/admin/orders').subscribe({
+    this.http.get<any[]>(`${environment.apiUrl}/api/admin/orders`).subscribe({
       next: (orders) => {
         this.orders = orders;
         this.loading = false;
