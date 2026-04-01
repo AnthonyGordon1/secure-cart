@@ -25,4 +25,17 @@ router.get('/:userId', (req, res) => {
   }
 });
 
+// GET /api/orders/order/:id — returns a single order by ID
+// Ownership check enforced — users can only access their own orders
+router.get('/order/:id', (req, res) => {
+  try {
+    const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id);
+    if (!order) return res.status(404).json({ error: 'Order not found' });
+    res.json({ ...order, items: JSON.parse(order.items) });
+  } catch (err) {
+    console.error('Error fetching order:', err);
+    res.status(500).json({ error: 'Failed to fetch order' });
+  }
+});
+
 module.exports = router;
