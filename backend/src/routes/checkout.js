@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const { produceOrderPlaced } = require('../producers/orderProducer');
-const { produceUserActivity } = require('../producers/userActivityProducer');
 const db = require('../db/database');
 
 router.post('/', async (req, res) => {
