@@ -1,13 +1,7 @@
 // userActivityConsumer.js
 // Consumes events from the user.activity Kafka topic and logs them.
 
-const { Kafka } = require('kafkajs');
-const { kafkaBroker } = require('../config');
-
-const kafka = new Kafka({
-    clientId: 'securecart-consumer',
-    brokers: [kafkaBroker || 'localhost:9092']
-});
+const kafka = require('../kafka/kafkaClient');
 
 const consumer = kafka.consumer({ groupId: 'user-activity-group' });
 

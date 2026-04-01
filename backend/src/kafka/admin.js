@@ -1,9 +1,4 @@
-const { Kafka } = require('kafkajs');
-
-const kafka = new Kafka({
-  clientId: 'securecart',
-  brokers: [process.env.KAFKA_BROKER || 'localhost:9092']
-});
+const kafka = require('./kafkaClient');
 
 const admin = kafka.admin();
 

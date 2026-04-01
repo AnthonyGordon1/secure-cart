@@ -1,13 +1,7 @@
 // userActivityProducer.js
 // Produces user activity events to the user.activity Kafka topic.
 
-const { Kafka } = require('kafkajs');
-const { kafkaBroker } = require('../config');
-
-const kafka = new Kafka({
-  clientId: 'securecart',
-  brokers: [kafkaBroker || 'localhost:9092']
-});
+const kafka = require('../kafka/kafkaClient');
 
 const producer = kafka.producer();
 
