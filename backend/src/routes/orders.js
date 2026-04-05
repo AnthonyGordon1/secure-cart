@@ -4,6 +4,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db/database');
+const { verifyToken } = require('../middleware/verifyToken');
 
 // GET /api/orders/:userId — returns all orders for a user
 router.get('/:userId', (req, res) => {
