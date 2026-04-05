@@ -12,6 +12,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ProductService, Product } from '../../services/product';
 import { CartService } from '../../services/cart';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../env/env';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 
 @Component({
@@ -19,12 +24,15 @@ import { CartService } from '../../services/cart';
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
     MatBadgeModule,
     MatToolbarModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   templateUrl: './products.html',
   styleUrls: ['./products.scss']
@@ -51,31 +59,33 @@ export class ProductsComponent implements OnInit {
     public router: Router,
     private cdr: ChangeDetectorRef,
     private cartService: CartService,
+    private http: HttpClient,
 
   ) { }
 
-  ngOnInit() {
-    this.cartService.cart$.subscribe(() => {
-      this.cartCount = this.cartService.getTotalCount();
-      this.cdr.detectChanges();
-    });
+ngOnInit() {
+  this.cartService.cart$.subscribe(() => {
+    this.cartCount = this.cartService.getTotalCount();
+    this.cdr.detectChanges();
+  });
 
-    this.productService.getProducts().subscribe({
-      next: (products) => {
-        console.log('Products received:', products);
-        this.products = products;
-        this.loading = false;
-        // Force Angular to detect the changes
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.log('Error:', err);
-        this.error = 'Failed to load products';
-        this.loading = false;
-        this.cdr.detectChanges();
-      }
-    });
-  }
+  this.loadProducts();
+}
+
+loadProducts() {
+  this.productService.getProducts().subscribe({
+    next: (products) => {
+      this.products = products;
+      this.loading = false;
+      this.cdr.detectChanges();
+    },
+    error: () => {
+      this.error = 'Failed to load products';
+      this.loading = false;
+      this.cdr.detectChanges();
+    }
+  });
+}
 
 
   // Add a product to the cart
@@ -103,6 +113,27 @@ export class ProductsComponent implements OnInit {
     return this.cartService.getItems().some(i => i.product.id === productId);
   }
   goToCart() { this.router.navigate(['/cart']); }
+
+  searchQuery = '';
+
+  searchProducts() {
+    if (this.searchQuery.trim() === '') {
+      // If empty search reload all products
+      this.loadProducts();
+      return;
+    }
+    this.http.get<Product[]>(`${environment.apiUrl}/api/products/search?q=${this.searchQuery}`)
+      .subscribe({
+        next: (products) => {
+          this.products = products;
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.error = 'Search failed';
+          this.cdr.detectChanges();
+        }
+      });
+  }
 
   logout() {
     localStorage.removeItem('token');
