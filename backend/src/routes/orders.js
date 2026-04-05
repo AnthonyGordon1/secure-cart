@@ -4,6 +4,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db/database');
+const { verifyToken } = require('../middleware/verifyToken');
 
 // GET /api/orders/:userId — returns all orders for a user
 router.get('/:userId', (req, res) => {
@@ -25,16 +26,20 @@ router.get('/:userId', (req, res) => {
   }
 });
 
-// GET /api/orders/order/:id — returns a single order by ID
-// Ownership check enforced — users can only access their own orders
-// VULNERABILITY (Story 8) — Insecure Direct Object Reference (IDOR)
-// No ownership check on order lookup — any authenticated user can access any order by ID
-// Attacker can enumerate all orders by iterating order IDs
-// Secure version: verify req.user.id === order.user_id before returning — see patch/idor
-router.get('/order/:id', (req, res) => {
+// PATCHED (Story 8) — IDOR ownership check added
+// Verifies the requesting user owns the order before returning it
+// Returns 403 if user_id does not match the authenticated user
+router.get('/order/:id', verifyToken, (req, res) => {
   try {
     const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id);
+
     if (!order) return res.status(404).json({ error: 'Order not found' });
+
+    // Ownership check — user can only access their own orders
+    if (order.user_id !== req.user.id) {
+      return res.status(403).json({ error: 'Access denied — this order does not belong to you' });
+    }
+
     res.json({ ...order, items: JSON.parse(order.items) });
   } catch (err) {
     console.error('Error fetching order:', err);
